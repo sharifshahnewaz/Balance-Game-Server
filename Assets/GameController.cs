@@ -44,7 +44,7 @@ public class GameController : MonoBehaviour
 		} catch (Exception ex) {
 			Debug.Log (ex.ToString ());
 		}
-		displayMessage = "Press 'R' to start recording data";
+		displayMessage = "Press 'P' to start recording data";
 		sb = new StringBuilder ();
 		sb.Append ("System Time,Elapsed Time,Gravity X,Gravity Y, PathX, PathY, Path, Weight\n");
 		StartCoroutine (WriteInFile ());
@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
 				theClient.GetWiiFitRawData (out tl, out tr, out bl, out br, out fitbutt);
 				theClient.GetWiiFitGravityData (out weight, out gravX, out gravY, out fitbutt);
 			} catch (Exception ex) {
-				Debug.Log (ex.ToString ());
+				//Debug.Log (ex.ToString ());
 			}
 			if (!isFirstRow) {
 				pathX = Math.Abs (gravX - prevGravX);
@@ -84,15 +84,15 @@ public class GameController : MonoBehaviour
 	
 	void Update ()
 	{
-		if (Input.GetKeyDown (KeyCode.R)) {
+		if (Input.GetKeyDown (KeyCode.P)) {
 		
 			if (isWriting) {
 				isWriting = false;
-				displayMessage = "Press 'R' to start recording data";
+				displayMessage = "Press 'P' to start playing";
                 CustomMessages.Instance.SendNetworkMessage("pause");
             } else {
 				isWriting = true;
-				displayMessage = "Data is recording... Press 'R' to stop";
+				displayMessage = "Press 'P' to pause playing";
                 CustomMessages.Instance.SendNetworkMessage("play");
             }
 		}
