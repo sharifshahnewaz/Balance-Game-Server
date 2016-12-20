@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Net.Sockets;
-using System.Net;
+using HoloToolkit.Sharing;
 
 public class GameController : MonoBehaviour
 {
@@ -39,7 +37,11 @@ public class GameController : MonoBehaviour
 	
 	void Start ()
 	{
-		try {
+        CustomMessages.Instance.MessageHandlers[CustomMessages.TestMessageID.NetworkMessage] = this.handleNetworkMessage;
+
+        SharingSessionTracker.Instance.SessionJoined += Instance_SessionJoined;
+
+        try {
 			theClient = new UIVA_Client_WiiFit (ipUIVAServer);
 		} catch (Exception ex) {
 			Debug.Log (ex.ToString ());
@@ -96,13 +98,47 @@ public class GameController : MonoBehaviour
                 CustomMessages.Instance.SendNetworkMessage("play");
             }
 		}
-		if (elapsedTime >= studyDuration) {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            CustomMessages.Instance.SendNetworkMessage("noframe");
+        }
+            if (elapsedTime >= studyDuration) {
 			isWriting = false;
 			displayMessage = "Data recording is done";
 		}
 	}
-	
-	void OnGUI ()
+
+    void gameOver() {
+    }
+    //handles command that is coming from the server 
+    void handleNetworkMessage(NetworkInMessage msg)
+    {
+        Debug.Log("handle command");
+        msg.ReadInt64();// important! the id of the message.
+        string command = msg.ReadString(); //the messages from the server;
+        switch (command)
+        {
+            case "gameover":
+                isWriting = false;
+                displayMessage = "Data recording is done";
+                break;
+
+            default:
+                break;
+        }
+        Debug.Log(command);
+
+    }
+
+    private void Instance_SessionJoined(object sender, SharingSessionTracker.SessionJoinedEventArgs e)
+    {
+        /*if (GotTransform)
+		{
+			CustomMessages.Instance.SendStageTransform(transform.localPosition, transform.localRotation);
+		}*/
+        Debug.Log("instance_sessionjoined called");
+    }
+    void OnGUI ()
 	{
 		GUI.skin.label.fontSize = 30;
 		
