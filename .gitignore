@@ -19,7 +19,7 @@ Servers/
 *.booproj
 *.unitypackage
 *-balance-*.csv
-*-balance-*.txt
+*-score-*.txt
 
 # Unity3D generated meta files
 *.pidb.meta
