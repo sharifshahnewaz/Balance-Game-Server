@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
 
     public int sampleRate = 10;
     public String resourceFile;
-    String studyCondition;
+    public String studyCondition;
     int totalBall = 1000; // a large value
     double studyDuration = 1000; // a large value
     bool isGameCondition = true;
