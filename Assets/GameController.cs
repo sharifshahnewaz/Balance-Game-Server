@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
     private string fitbutt = "";
     private double elapsedTime = 0.0f;
 
-    private bool isWriting = false;
+    public bool isWriting = false;
     private string displayMessage = null;
     private StringBuilder sb;
 
