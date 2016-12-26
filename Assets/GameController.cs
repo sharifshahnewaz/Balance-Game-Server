@@ -112,13 +112,19 @@ public class GameController : MonoBehaviour
             {
                 isWriting = false;
                 displayMessage = "Press 'P' to start playing";
-                CustomMessages.Instance.SendNetworkMessage("pause");
+                if (isGameCondition)
+                {
+                    CustomMessages.Instance.SendNetworkMessage("pause");
+                }
             }
             else
             {
                 isWriting = true;
                 displayMessage = "Press 'P' to pause playing";
-                CustomMessages.Instance.SendNetworkMessage("play");
+                if (isGameCondition)
+                {
+                    CustomMessages.Instance.SendNetworkMessage("play");
+                }
             }
         }
         /*if (Input.GetKeyDown(KeyCode.F))
@@ -140,10 +146,11 @@ public class GameController : MonoBehaviour
     //handles command that is coming from the server 
     void handleNetworkMessage(NetworkInMessage msg)
     {
-        Debug.Log("handle command");
+        
         msg.ReadInt64();// important! the id of the message.
         string message = msg.ReadString().ToString();
-        string command = message.Split('+')[0] ; //the messages from the server;
+        string command = message.Split('+')[0]; //the messages from the server;
+        Debug.Log("Command received - " + command);
         switch (command)
         {
             case "gameover":
@@ -155,8 +162,7 @@ public class GameController : MonoBehaviour
             default:
                 break;
         }
-        Debug.Log(command);
-
+       
     }
 
     private void Instance_SessionJoined(object sender, SharingSessionTracker.SessionJoinedEventArgs e)
@@ -172,23 +178,31 @@ public class GameController : MonoBehaviour
 
         switch (studyCondition)
         {
-            case "srf":
+            case "srfdynamic":
                 totalBall = Convert.ToInt32(textStream.ReadLine());
                 CustomMessages.Instance.SendNetworkMessage("totalball+" + totalBall);
                 Debug.Log("sending message");
                 isGameCondition = true;
                 break;
-            case "nosrf":
+            case "nosrfdynamic":
                 totalBall = Convert.ToInt32(textStream.ReadLine());
                 CustomMessages.Instance.SendNetworkMessage("totalball+" + totalBall);
-                CustomMessages.Instance.SendNetworkMessage("nosrf");
+                CustomMessages.Instance.SendNetworkMessage("nosrfdynamic");
                 Debug.Log("sending message");
                 isGameCondition = true;
                 break;
             case "eyesopen": //eyes open
             case "eyesclosed": //eyes closed
+            case "srfstatic":
                 isGameCondition = false;
-                studyDuration = Convert.ToInt32(textStream.ReadLine()); ;
+                studyDuration = Convert.ToInt32(textStream.ReadLine());
+                break;
+            case "nosrfstatic":
+                isGameCondition = false;
+                studyDuration = Convert.ToInt32(textStream.ReadLine());
+                CustomMessages.Instance.SendNetworkMessage("nosrfstatic");
+                break;
+            default:
                 break;
         }
     }
