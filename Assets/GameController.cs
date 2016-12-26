@@ -181,6 +181,7 @@ public class GameController : MonoBehaviour
             case "srfdynamic":
                 totalBall = Convert.ToInt32(textStream.ReadLine());
                 CustomMessages.Instance.SendNetworkMessage("totalball+" + totalBall);
+                CustomMessages.Instance.SendNetworkMessage("srfdynamic");
                 Debug.Log("sending message");
                 isGameCondition = true;
                 break;
@@ -193,10 +194,15 @@ public class GameController : MonoBehaviour
                 break;
             case "eyesopen": //eyes open
             case "eyesclosed": //eyes closed
-            case "srfstatic":
                 isGameCondition = false;
                 studyDuration = Convert.ToInt32(textStream.ReadLine());
                 break;
+            case "srfstatic":
+                isGameCondition = false;
+                studyDuration = Convert.ToInt32(textStream.ReadLine());
+                CustomMessages.Instance.SendNetworkMessage("srfstatic");
+                break;
+                
             case "nosrfstatic":
                 isGameCondition = false;
                 studyDuration = Convert.ToInt32(textStream.ReadLine());
